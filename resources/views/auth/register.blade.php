@@ -8,13 +8,13 @@
 <div class="block mx-auto my-12 p-8 bg-white w-1/3 border border-gray-200 
 rounded-lg shadow-lg">
 
-  <h1 class="text-3xl text-center font-bold">Register</h1>
+  <h1 class="text-3xl text-center font-bold">Registro</h1>
 
   <form class="mt-4" id="form_register" method="POST" action="">
     @csrf
 
     <input type="text" class="border border-gray-200 rounded-md bg-gray-200 w-full
-    text-lg placeholder-gray-900 p-2 my-2 focus:bg-white" placeholder="Name"
+    text-lg placeholder-gray-900 p-2 my-2 focus:bg-white" placeholder="Nombre"
     id="name" name="name">
 
     @error('name')        
@@ -23,7 +23,7 @@ rounded-lg shadow-lg">
     @enderror
 
     <input type="email" class="border border-gray-200 rounded-md bg-gray-200 w-full
-    text-lg placeholder-gray-900 p-2 my-2 focus:bg-white" placeholder="Email"
+    text-lg placeholder-gray-900 p-2 my-2 focus:bg-white" placeholder="Correo"
     id="email" name="email">
 
     @error('email')        
@@ -54,8 +54,8 @@ rounded-lg shadow-lg">
         * {{ $errors->first('g-recaptcha-response') }}
     </p>
     @endif
-    <button type="submit" class="rounded-md bg-indigo-500 w-full text-lg
-    text-white font-semibold p-2 my-3 hover:bg-indigo-600">Send</button>
+    <button type="submit" class="rounded-md bg-blue-500 w-full text-lg
+    text-white font-semibold p-2 my-3 hover:bg-blue-600">Enviar</button>
   </form>
  
 @endsection

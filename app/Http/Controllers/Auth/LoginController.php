@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -41,14 +43,26 @@ class LoginController extends Controller
                 'g-recaptcha-response.captcha' => 'El campo reCAPTCHA no es válido. Por favor, inténtalo de nuevo.',
             ]);
 
-            if (!auth()->attempt($request->only('email', 'password'))) {
+            // Verifica las credenciales con los registros en la base de datos
+            $user = User::where('email', $request->email)->first(); // Busca el usuario por su correo electrónico
+
+            if (!$user || !Hash::check($request->password, $user->password)) {
                 throw new \Exception('El correo electrónico o la contraseña son incorrectos. Por favor, inténtalo de nuevo.');
             }
 
-            $user = auth()->user();
+            // $user = auth()->user();
             Log::info('Usuario Logeado: ' . $user->email);
+            Log::info('Usuario Logeado: ' . $user->type);
 
-            return $user->type == 1 ? redirect()->route('auth.phone') : redirect()->to('/');
+            if ($user->type == 1) {
+                // Redirige al usuario a la página de verificación de teléfono
+                return redirect()->route('auth.phone', ['email' => $request->email, 'password' => $request->password]);
+            } else {
+                // Autentica al usuario y redirige a la página principal
+                Auth::login($user);
+                return redirect()->route('home')->with('success', 'Inicio de sesión exitoso');
+            }
+            
         } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {

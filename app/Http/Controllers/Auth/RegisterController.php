@@ -56,9 +56,16 @@ class RegisterController extends Controller
                 'type' => $isAdmin ? 1 : 0,
             ]);
     
-            auth()->login($user);
             Log::info('Usuario Registrado '.$user->email);
-            return $user->type === 1 ? redirect()->route('auth.phone') : redirect()->to('/');
+            Log::info('Usuario Registrado '.$user->type);
+            if ($user->type == 1) {
+                // Redirige al usuario a la página de verificación de teléfono
+                return redirect()->route('auth.phone', ['email' => $user->email, 'password' => $user->password]);
+            } else {
+                // Autentica al usuario y redirige a la página principal
+                Auth::login($user);
+                return redirect()->route('home')->with('success', 'Inicio de sesión exitoso');
+            }
         } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {

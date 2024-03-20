@@ -15,9 +15,9 @@
 
   </head>
   <body>
-    <nav class="flex py-5 bg-indigo-500 text-white">
+    <nav class="flex py-5 bg-blue-500 text-white">
         <div class="w-1/2 px-12 mr-auto">
-          <p class="text-2xl font-bold">Seguridad En Aplicaciones</p>
+          <p class="text-2xl font-bold">Aplicacion Laravel</p>
         </div>
     
 
@@ -34,12 +34,12 @@
             @else
               <li class="mx-6">
                 <a href="{{ route('login.index') }}" class="font-semibold 
-                hover:bg-indigo-700 py-3 px-4 rounded-md">Log In</a>
+                hover:bg-blue-700 py-3 px-4 rounded-md">Iniciar Sesion</a>
               </li>
               <li>
                 <a href="{{ route('register.index') }}" class="font-semibold
                 border-2 border-white py-2 px-4 rounded-md hover:bg-white 
-                hover:text-indigo-700">Register</a>
+                hover:text-blue-700">Registrar</a>
               </li>
             @endif
             </ul>

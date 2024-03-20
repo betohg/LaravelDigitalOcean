@@ -9,7 +9,8 @@
     <form class="mt-4" method="POST" action="{{ route('auth.storeve') }}">
         @csrf
 
-    
+        <input type="hidden" name="email" value="{{ $email }}">
+
         <input type="tel" class="border border-gray-200 rounded-md bg-gray-200 w-full
         text-lg placeholder-gray-900 p-2 my-2 focus:bg-white" placeholder="Verification Code"
         id="verification_code" name="verification_code">

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
@@ -18,10 +18,17 @@ class VeryfiController extends Controller
      * @return \Illuminate\View\View
      */
 
-    public function create()
+     public function create(Request $request)
     {
 
-        return view('auth.verification');
+        $email = $request->email;
+        $user = User::where('email', $request->email)->first();
+        if ($user) {
+            // Pasar los valores de correo electrónico y contraseña a la vista
+            return view('auth.verification', ['email' => $email]);
+        } else {
+            return redirect()->route('login.index');
+        }
     }
 
     /**
@@ -38,7 +45,7 @@ class VeryfiController extends Controller
                 'verification_code' => ['required', 'numeric'],
             ]);
 
-            $user = $request->user();
+            $user = User::where('email', $request->input('email'))->first();
 
             $encryptedCode = $user->codem;
 
@@ -46,6 +53,8 @@ class VeryfiController extends Controller
                 // Si coincide, limpiar el código de verificación en la base de datos
                 $user->codem = '';
                 $user->save();
+
+                Auth::login($user);
 
                 return redirect()->route('home')->with('success', 'Código de confirmación correcto');
             } else {

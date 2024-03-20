@@ -21,20 +21,16 @@ class SmsController extends Controller
      */
     public function create(Request $request)
     {
+        $email = $request->email;
+        $password = $request->password;
+        $user = User::where('email', $request->email)->first();
 
-        // $user = auth()->user();
-        $user = $request->user();
-
-        if ($user && $user->phone_number) {
-            $userphone = $user->phone_number;
-            $rawCode = mt_rand(100000, 999999);
-            $code = password_hash($rawCode, PASSWORD_DEFAULT);
-            $user->update(['codem' => $code]);
-            $this->sendSms($userphone, "Su código de verificación: $rawCode");
-            return redirect()->route('auth.verification');
+        if ($user) {
+            // Pasar los valores de correo electrónico y contraseña a la vista
+            return view('auth.phone', ['email' => $email, 'password' => $password]);
+        } else {
+            return redirect()->route('login.index');
         }
-
-        return view('auth.phone');
     }
     /**
      * Almacena el número de teléfono proporcionado por el usuario, 
@@ -55,7 +51,9 @@ class SmsController extends Controller
 
             $code = password_hash($rawCode, PASSWORD_DEFAULT);
 
-            $user = $request->user() ?? User::where('phone_number', $request->input('phone_number'))->first();
+            $user = User::where('email', $request->input('email'))->first();
+            Log::info('Correo electrónico: ' . $request->input('email'));
+            Log::info('Contraseña: ' . $request->input('password'));
 
             $phoneNumber = $request->input('phone_number');
             $phoneNumber = strpos($phoneNumber, '+') === 0 ? $phoneNumber : '+' . $phoneNumber;
@@ -66,7 +64,7 @@ class SmsController extends Controller
 
             $this->sendSms($phoneNumberWithCountryCode, "Su código de verificación: $rawCode");
 
-            return redirect()->route('auth.verification');
+            return redirect()->route('auth.verification', ['email' => $user->email]);
         } catch (ValidationException $e) {
             throw $e;
         } catch (TwilioException $e) {
