@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\RegistersUsers;
-
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -35,7 +35,6 @@ class RegisterController extends Controller
      */
     public function store()
     {
-
         try {
             $this->validate(request(), [
                 'name' => ['required', 'string', 'max:255'],
@@ -48,28 +47,25 @@ class RegisterController extends Controller
                 'password.regex' => 'La contraseña debe tener al menos 8 caracteres e incluir al menos un número y un carácter especial.',
             ]);
     
-            $isAdmin = User::count() === 0;
+            $noUsers = User::count() === 0;
+            $rol = Role::where('rol', 'Administrador')->value('id');
             $user = User::create([
                 'name' => request('name'),
                 'email' => request('email'),
                 'password' => bcrypt(request('password')),
-                'type' => $isAdmin ? 1 : 0,
+                'role_id' => $noUsers ? Role::where('rol', 'Administrador')->value('id') : Role::where('rol', 'Invitado')->value('id'),
             ]);
     
             Log::info('Usuario Registrado '.$user->email);
             Log::info('Usuario Registrado '.$user->type);
-            if ($user->type == 1) {
-                // Redirige al usuario a la página de verificación de teléfono
-                return redirect()->route('auth.phone', ['email' => $user->email, 'password' => $user->password]);
-            } else {
-                // Autentica al usuario y redirige a la página principal
-                Auth::login($user);
-                return redirect()->route('home')->with('success', 'Inicio de sesión exitoso');
-            }
+
+            return redirect()->route('login.index');
+            
         } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
             Log::error('Error al registrar usuario: ' . $e->getMessage());
+            Log::error('Intento Rol de Registro: ' . $rol);
             return back()->withErrors(['message' => 'Error al registrar el usuario. Por favor, inténtalo de nuevo.']);
         }
     }

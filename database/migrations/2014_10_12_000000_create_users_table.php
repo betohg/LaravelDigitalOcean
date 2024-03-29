@@ -21,8 +21,9 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone_number')->default(0); 
             $table->string('codem')->default(0);
-            $table->integer('type')->default(0);
             $table->boolean('phone_verified')->default(false);
+            $table->unsignedBigInteger('role_id'); // Nueva columna para la clave externa
+            $table->foreign('role_id')->references('id')->on('roles'); // Definición de la clave externa
             $table->rememberToken();
             $table->timestamps();
         });
