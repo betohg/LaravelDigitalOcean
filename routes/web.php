@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SmsController;
 use App\Http\Controllers\Auth\VeryfiController;
+use App\Http\Controllers\ProductoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,4 +46,7 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/verification', [VeryfiController::class, 'create'])->name('auth.verification');
     Route::post('/verification', [VeryfiController::class, 'store'])->name('auth.storeve');
+
+    Route::get('/products', [ProductoController::class, 'create'])->name('products.index');
+    Route::post('/products', [ProductoController::class, 'store'])->name('register.store');
 });
