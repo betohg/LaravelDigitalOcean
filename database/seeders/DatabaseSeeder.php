@@ -2,23 +2,31 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
-class DatabaseSeeder extends Seeder
+class RolesSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // Insertar el rol de Administrador
+        DB::table('roles')->insert([
+            'rol' => 'Administrador',
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // Insertar el rol de Coordinador
+        DB::table('roles')->insert([
+            'rol' => 'Coordinador',
+        ]);
+
+        // Insertar el rol de Invitado
+        DB::table('roles')->insert([
+            'rol' => 'Invitado',
+        ]);
     }
 }
