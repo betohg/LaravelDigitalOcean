@@ -137,7 +137,7 @@ class LoginController extends Controller
             ]);
         }
 
-        if ($user->type !== 1) {
+        if ($user->role_id !== 1) {
             return response()->json([
                 'nosuccess' => true,
                 'message' => 'Error: Usuario no autorizado'
