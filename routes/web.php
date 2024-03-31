@@ -5,8 +5,9 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SmsController;
 use App\Http\Controllers\Auth\VeryfiController;
+use App\Http\Controllers\Auth\ApplicationController;
 use App\Http\Controllers\ProductoController;
-
+use App\Models\Producto;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,7 +23,8 @@ use App\Http\Controllers\ProductoController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
-        return view('home');
+        $productos = Producto::all(); // Obtén todos los productos
+        return view('home', compact('productos')); // Pasa la variable $productos a la vista
     })->name('home');
 
     // Route::get('/phone', [SmsController::class, 'create'])->name('auth.phone');
@@ -30,6 +32,9 @@ Route::middleware('auth')->group(function () {
 
     // Route::get('/verification', [VeryfiController::class, 'create'])->name('auth.verification');
     // Route::post('/verification', [VeryfiController::class, 'store'])->name('auth.storeve');
+
+    Route::get('/products', [ProductoController::class, 'create'])->name('products.index');
+    Route::post('/products', [ProductoController::class, 'store'])->name('products.store');
 
     Route::get('/logout', [LoginController::class, 'destroy'])->name('login.destroy');
 });
@@ -42,11 +47,13 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 
     Route::get('/phone', [SmsController::class, 'create'])->name('auth.phone');
+
     Route::post('/phone', [SmsController::class, 'store'])->name('auth.store');
 
     Route::get('/verification', [VeryfiController::class, 'create'])->name('auth.verification');
     Route::post('/verification', [VeryfiController::class, 'store'])->name('auth.storeve');
 
-    Route::get('/products', [ProductoController::class, 'create'])->name('products.index');
-    Route::post('/products', [ProductoController::class, 'store'])->name('register.store');
+    Route::get('/application', [ApplicationController::class, 'create'])->name('app.verification');
+    Route::post('/application', [ApplicationController::class, 'store'])->name('app.store');
+
 });

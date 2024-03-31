@@ -9,7 +9,6 @@
 
   <!-- Tailwind CSS Link -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.1/tailwind.min.css">
-  <link rel="stylesheet" href="styles.css">
 
   <!-- Fontawesome Link -->
   <link href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet">
@@ -51,7 +50,7 @@
             @if(auth()->check())
             <div class="flex space-x-4">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Inicio</a>
+              <a href="{{ route('home') }}" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Inicio</a>
             </div>
             @endif
           </div>
@@ -92,7 +91,7 @@
               <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Mi Perfil</a>
               <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Mi Carrito</a>
               @if(Auth::user()->role_id == 1)
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Panel Administrativo</a>
+              <a href="{{ route('products.index') }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Panel Administrativo</a>
               @endif
             </div>
           </div>
@@ -126,14 +125,18 @@
       }
     });
 
-    document.getElementById("user-menu-button").addEventListener("click", function() {
-      var menu = document.getElementById("user-menu");
-      if (menu.classList.contains("hidden")) {
-        menu.classList.remove("hidden");
-      } else {
-        menu.classList.add("hidden");
-      }
-    });
+    try {
+      document.getElementById("user-menu-button").addEventListener("click", function() {
+        var menu = document.getElementById("user-menu");
+        if (menu.classList.contains("hidden")) {
+          menu.classList.remove("hidden");
+        } else {
+          menu.classList.add("hidden");
+        }
+      });
+    } catch (error) {
+      console.log("El elemento user-menu-button no está disponible.");
+    }
   </script>
 </body>
 

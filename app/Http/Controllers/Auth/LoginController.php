@@ -79,4 +79,88 @@ class LoginController extends Controller
 
         return redirect()->to('/');
     }
+
+
+    public function destroyT(Request $request)
+    {
+
+        $request->user()->forceFill([
+
+            'api_token' => null,
+
+        ])->save();
+
+        return response()->json(['messageClose' => 'Usuario Deslogueado']);
+    }
+
+
+    public function confirmCode(Request $request)
+    {
+        $secondcode = $request->validate([
+            'applicationcode' => ['required'],
+        ]);
+        // $secondcode = '788556'; // Código a verificar
+
+        $user = User::where('applicationcode', $secondcode)->first();
+
+        if ($user) {
+            $user->forceFill([
+                'appstatus' => 1,
+            ])->save();
+            return response()->json([
+                'success' => true,
+                'user' => $user
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Código incorrecto'
+            ]);
+        }
+    }
+
+
+
+    public function logintwo(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            return response()->json([
+                'nosuccess' => true,
+                'message' => 'Credenciales Incorrectas'
+            ]);
+        }
+
+        if ($user->type !== 1) {
+            return response()->json([
+                'nosuccess' => true,
+                'message' => 'Error: Usuario no autorizado'
+            ]);
+        }
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $token = $user->createToken('token')->plainTextToken;
+            $user->forceFill([
+                'api_token' => $token,
+            ])->save();
+
+            return response()->json([
+                'token' => $token,
+                'success' => true,
+                'user' => $user,
+            ]);
+        } else {
+            return response()->json([
+                'nosuccess' => true,
+                'message' => 'Credenciales Incorrectas'
+            ]);
+        }
+    }
 }

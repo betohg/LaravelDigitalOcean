@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ProductoController extends Controller
 {
@@ -17,22 +19,39 @@ class ProductoController extends Controller
     // Muestra el formulario para crear un nuevo producto
     public function create()
     {
+        // $user = Auth::user();
+        // Log::info('Usuario Registrado '.$user);
+        // if ($user and $user->role_id == 1) {
+        //     return view('productos.create');
+        // } else {
+        //     return redirect()->route('login.index');
+        // }
+
         return view('productos.create');
+
     }
 
     // Almacena un nuevo producto en la base de datos
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre' => 'required|string',
-            'precio' => 'required|string|unique:productos',
-            'descripcion' => 'nullable|string',
-            'imagen' => 'required|string',
-        ]);
-
-        Producto::create($request->all());
-
-        return redirect()->route('productos.index')->with('success', 'Producto creado correctamente.');
+        try {
+            $request->validate([
+                'name' => 'required|string',
+                'price' => 'required',
+                'description' => 'nullable|string',
+                'image' => 'required|string',
+            ]);
+    
+            Producto::create($request->all());
+    
+            return redirect()->route('products.index')->with('success', 'Producto creado correctamente.');
+        } catch (\Exception $e) {
+            // Registra el error en los logs
+            Log::error('Error al crear un producto: ' . $e->getMessage());
+    
+            // Puedes redirigir a una página de error o manejar el error de alguna otra manera
+            return redirect()->route('products.index')->with('error', 'Ha ocurrido un error al crear el producto.');
+        }
     }
 
     // Muestra el producto con el ID especificado
@@ -54,7 +73,7 @@ class ProductoController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string',
-            'precio' => 'required|string|unique:productos,precio,'.$id,
+            'precio' => 'required|string|unique:productos,precio,' . $id,
             'descripcion' => 'nullable|string',
             'imagen' => 'required|string',
         ]);

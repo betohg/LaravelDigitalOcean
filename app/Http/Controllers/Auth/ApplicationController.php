@@ -2,30 +2,37 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
 
-class VeryfiController extends Controller
+class ApplicationController extends Controller
 {
-
     /**
-     * Muestra la vista de verificación de código.
+     * Muestra la vista de verificación de código por aplicacion.
      *
      * @return \Illuminate\View\View
      */
 
     public function create(Request $request)
     {
-
-        $email = $request->email;
         $user = User::where('email', $request->email)->first();
+
         if ($user) {
-            // Pasar los valores de correo electrónico y contraseña a la vista
-            return view('auth.verification', ['email' => $email]);
+            $codigoAleatorio = Str::random(16); // Genera una cadena aleatoria de longitud 16
+
+            // Asigna el código aleatorio a la columna applicationcode
+            $user->applicationcode = $codigoAleatorio;
+
+            // Guarda el modelo actualizado
+            $user->save();
+
+            // Pasa el código aleatorio a la vista
+            return view('auth.application', ['codigoAleatorio' => $codigoAleatorio, 'email' => $request->email]);
         } else {
             return redirect()->route('login.index');
         }
@@ -41,32 +48,20 @@ class VeryfiController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->validate($request, [
-                'verification_code' => ['required', 'numeric'],
-            ]);
 
             $user = User::where('email', $request->input('email'))->first();
 
-            $encryptedCode = $user->codem;
-
-            if (password_verify($request->input('verification_code'), $encryptedCode)) {
-
-                if ($user->role_id == 1) {
-                    $user->codem = '';
-                    $user->save();
-                    return redirect()->route('app.verification', ['email' => $user->email]);
-                }
+            if ($user->appstatus == 1) {
                 // Si coincide, limpiar el código de verificación en la base de datos
-                $user->codem = '';
+                $user->appstatus = 0;
+                $user->applicationcode = null;
                 $user->save();
 
                 Auth::login($user);
 
-                return redirect()->route('home')->with('success', 'Código de confirmación correcto');
+                return redirect()->route('home')->with('success', 'Confirmado por aplicacion');
             } else {
-                return back()->withErrors([
-                    'message' => 'Código incorrecto',
-                ]);
+                return redirect()->route('app.verification', ['email' => $user->email])->with('error', 'Usuario no validado por aplicación.');
             }
         } catch (ValidationException $e) {
             throw $e;
