@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/products', [ProductoController::class, 'create'])->name('products.index');
     Route::post('/products', [ProductoController::class, 'store'])->name('products.store');
 
+    Route::get('/productsindex', [ProductoController::class, 'index'])->name('products.table');
+
     Route::get('/logout', [LoginController::class, 'destroy'])->name('login.destroy');
 });
 
@@ -55,5 +57,7 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/application', [ApplicationController::class, 'create'])->name('app.verification');
     Route::post('/application', [ApplicationController::class, 'store'])->name('app.store');
+
+    
 
 });
