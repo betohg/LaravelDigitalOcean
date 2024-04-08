@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','RegisterProduct' )
+@section('title','EditProduct' )
 
 
 @section('content')
@@ -10,14 +10,15 @@ rounded-lg shadow-lg">
 
     @if(session('success'))
     <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-        <span class="font-medium">Registro Exitoso!</span> {{ session('success') }}
+        <span class="font-medium">Edicion Exitosa!</span> {{ session('success') }}
     </div>
     @endif
 
     <h1 class="text-3xl text-center font-bold">Registrar Producto</h1>
 
-    <form id="form_register" method="POST" action="">
-        @csrf
+    <form action="{{ route('productos.update', $producto->id) }}" method="POST">
+    @csrf
+    @method('PUT')
         <div class="space-y-12">
 
             <div class="border-b border-gray-900/10 pb-12">
@@ -25,10 +26,9 @@ rounded-lg shadow-lg">
                     <div class="sm:col-span-5">
                         <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Nombre</label>
                         <div class="mt-2">
-                            <input type="text" name="name" id="name" autocomplete="name" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <input type="text" name="name" id="name" autocomplete="name" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value="{{ $producto->name }}">
                             @error('name')
-                            <p class="border border-red-500 rounded-md bg-red-100 w-full
-                                text-red-600 p-2 my-2">* {{ $message }}</p>
+                            <p class="border border-red-500 rounded-md bg-red-100 w-full text-red-600 p-2 my-2">* {{ $message }}</p>
                             @enderror
                         </div>
                     </div>
@@ -38,7 +38,7 @@ rounded-lg shadow-lg">
                         <label for="price" class="block text-sm font-medium leading-6 text-gray-900">Precio</label>
                         <div class="mt-2">
                             <div class="flex">
-                                <input type="text" name="price" id="price" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <input type="text" name="price" id="price" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value="{{ $producto->price }}">
                             </div>
                             @error('price')
                             <p class="border border-red-500 rounded-md bg-red-100 w-full text-red-600 p-2 my-2">* {{ $message }}</p>
@@ -49,10 +49,9 @@ rounded-lg shadow-lg">
                     <div class="sm:col-span-6">
                         <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Descripción</label>
                         <div class="mt-2">
-                            <input id="description" name="description" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <input id="description" name="description" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value="{{ $producto->description }}">
                             @error('description')
-                            <p class="border border-red-500 rounded-md bg-red-100 w-full
-                                text-red-600 p-2 my-2">* {{ $message }}</p>
+                            <p class="border border-red-500 rounded-md bg-red-100 w-full text-red-600 p-2 my-2">* {{ $message }}</p>
                             @enderror
                         </div>
                     </div>
@@ -60,10 +59,9 @@ rounded-lg shadow-lg">
                     <div class="sm:col-span-6">
                         <label for="image" class="block text-sm font-medium leading-6 text-gray-900">Imagen</label>
                         <div class="mt-2">
-                            <input id="image" name="image" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <input id="image" name="image" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value="{{ $producto->image }}">
                             @error('image')
-                            <p class="border border-red-500 rounded-md bg-red-100 w-full
-                                text-red-600 p-2 my-2">* {{ $message }}</p>
+                            <p class="border border-red-500 rounded-md bg-red-100 w-full text-red-600 p-2 my-2">* {{ $message }}</p>
                             @enderror
                         </div>
                     </div>

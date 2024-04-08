@@ -36,8 +36,8 @@
                     {{ $producto->price }}
                 </td>
                 <td class="px-6 py-4">
-                <button type="button" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-1 me-0 mb-0 dark:focus:ring-yellow-900">Editar</button>
-                    <button type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-1 me-0 mb-0 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Eliminar</button>
+                    <a href="{{ route('productos.edit', $producto->id) }}" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-1 me-0 mb-0 dark:focus:ring-yellow-900">Editar</a>
+                    <a href="{{ route('productos.destroy', $producto->id) }}" onclick="event.preventDefault(); if(confirm('¿Estás seguro de que quieres eliminar este producto?')) { fetch('{{ route('productos.destroy', $producto->id) }}', { method: 'DELETE', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }}).then(response => { if(response.ok) location.reload(); }).catch(error => console.error('Error al eliminar el producto:', error)); }" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-1 me-0 mb-0 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Eliminar</a>
                 </td>
             </tr>
             @endforeach

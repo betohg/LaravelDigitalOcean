@@ -28,7 +28,6 @@ class ProductoController extends Controller
         // }
 
         return view('productos.create');
-
     }
 
     // Almacena un nuevo producto en la base de datos
@@ -41,14 +40,14 @@ class ProductoController extends Controller
                 'description' => 'nullable|string',
                 'image' => 'required|string',
             ]);
-    
+
             Producto::create($request->all());
-    
+
             return redirect()->route('products.index')->with('success', 'Producto creado correctamente.');
         } catch (\Exception $e) {
             // Registra el error en los logs
             Log::error('Error al crear un producto: ' . $e->getMessage());
-    
+
             // Puedes redirigir a una página de error o manejar el error de alguna otra manera
             return redirect()->route('products.index')->with('error', 'Ha ocurrido un error al crear el producto.');
         }
@@ -65,23 +64,23 @@ class ProductoController extends Controller
     public function edit($id)
     {
         $producto = Producto::findOrFail($id);
-        return view('productos.edit', compact('producto'));
+        return view('productos.editarproducto', compact('producto'));
     }
 
     // Actualiza el producto con el ID especificado en la base de datos
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nombre' => 'required|string',
-            'precio' => 'required|string|unique:productos,precio,' . $id,
-            'descripcion' => 'nullable|string',
-            'imagen' => 'required|string',
+            'name' => 'required|string',
+            'price' => 'required|string',
+            'description' => 'nullable|string',
+            'image' => 'required|string',
         ]);
 
         $producto = Producto::findOrFail($id);
         $producto->update($request->all());
 
-        return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
+        return redirect()->route('products.table', $producto->id)->with('success', 'Producto actualizado correctamente.');
     }
 
     // Elimina el producto con el ID especificado de la base de datos
@@ -90,6 +89,6 @@ class ProductoController extends Controller
         $producto = Producto::findOrFail($id);
         $producto->delete();
 
-        return redirect()->route('productos.index')->with('success', 'Producto eliminado correctamente.');
+        return redirect()->route('products.table')->with('success', 'Producto eliminado correctamente.');
     }
 }
