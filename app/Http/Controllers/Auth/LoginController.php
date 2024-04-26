@@ -53,9 +53,9 @@ class LoginController extends Controller
 
             if ($user->role_id == 1 || $user->role_id == 2) {
                 // Redirige al usuario a la página de verificación de teléfono
-                Auth::login($user);
-                return redirect()->route('home')->with('success', 'Inicio de sesión exitoso');
-                // return redirect()->route('auth.phone', ['email' => $request->email]);
+                //Auth::login($user);
+                //return redirect()->route('home')->with('success', 'Inicio de sesión exitoso');
+                 return redirect()->route('auth.phone', ['email' => $request->email]);
             } else {
                 // Autentica al usuario y redirige a la página principal
                 Auth::login($user);
